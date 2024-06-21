@@ -30,6 +30,11 @@ def read_user():
 
 @app.get('/users/{user_id}', response_model=UserPublic)
 def read_user_by_id(user_id: int):
+    if user_id < 1 or user_id > len(database):
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='User not found'
+        )
+
     user = database[user_id - 1]
     return user
 
