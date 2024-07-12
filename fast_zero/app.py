@@ -1,3 +1,4 @@
+from datetime import datetime
 from http import HTTPStatus
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -81,6 +82,7 @@ def update_user(
     db_user.email = user.email
     db_user.username = user.username
     db_user.password = user.password
+    db_user.updated_at = datetime.now()
 
     session.add(db_user)
     session.commit()

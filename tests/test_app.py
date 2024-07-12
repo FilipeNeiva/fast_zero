@@ -28,6 +28,32 @@ def test_create_user(client):
     }
 
 
+def test_create_user_with_username_exist(client, user):
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'Teste',
+            'email': 'teste2@test.com',
+            'password': 'testtest',
+        },
+    )
+
+    assert response.json() == {'detail': 'Username already exists'}
+
+
+def test_create_user_with_email_exist(client, user):
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'Teste2',
+            'email': 'teste@test.com',
+            'password': 'testtest',
+        },
+    )
+
+    assert response.json() == {'detail': 'Email already exists'}
+
+
 def test_read_users(client):
     response = client.get('/users/')
 
