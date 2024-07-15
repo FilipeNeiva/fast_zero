@@ -12,13 +12,11 @@ from zoneinfo import ZoneInfo
 
 from fast_zero.database import get_session
 from fast_zero.models import User
+from fast_zero.settings import Settings
 
 pwd_context = PasswordHash.recommended()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
-
-SECRET_KEY = 'your-secret-key'
-ALGORITHM = 'HS256'
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/token')
+settings = Settings()
 
 
 def get_password_hash(password: str):
