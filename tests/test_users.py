@@ -117,8 +117,6 @@ def test_delete_user(client, user, token):
         headers={'Authorization': f'Bearer {token}'},
     )
 
-    print(response)
-
     assert response.json() == {'message': 'User deleted'}
 
 
@@ -126,3 +124,13 @@ def test_delete_user_nonexistent(client):
     response = client.delete('/users/2')
 
     assert response.json() == {'detail': 'Not authenticated'}
+
+
+def test_delete_wrong_user(client, user, token):
+    response = client.delete(
+        f'/users/{user.id + 1}',
+        headers={'Authorization': f'Bearer {token}'},
+    )
+
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json() == {'detail': 'Not enough permission'}
