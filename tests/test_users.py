@@ -81,6 +81,22 @@ def test_update_user(client, user, token):
     }
 
 
+def test_update_wrong_user(client, user, token):
+    response = client.put(
+        f'/users/{user.id + 1}',
+        headers={'Authorization': f'Bearer {token}'},
+        json={
+            'password': '123',
+            'username': 'testusername2',
+            'email': 'test@test.com',
+            'id': 1,
+        },
+    )
+
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json() == {'detail': 'Not enough permission'}
+
+
 def test_update_user_nonexistent(client):
     response = client.put(
         '/users/2',
