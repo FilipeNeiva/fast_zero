@@ -18,6 +18,8 @@ class UserPublic(BaseModel):
     username: str
     email: EmailStr
     model_config = ConfigDict(from_attributes=True)
+    created_at: str
+    updated_at: str
 
 
 class UserList(BaseModel):
@@ -37,6 +39,8 @@ class TodoSchema(BaseModel):
 
 class TodoPublic(TodoSchema):
     id: int
+    created_at: str
+    updated_at: str | None
 
 
 class TodoList(BaseModel):

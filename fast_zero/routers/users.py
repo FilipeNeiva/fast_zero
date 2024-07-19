@@ -1,4 +1,3 @@
-from datetime import datetime
 from http import HTTPStatus
 from typing import Annotated
 
@@ -88,7 +87,6 @@ def update_user(
     current_user.email = user.email
     current_user.username = user.username
     current_user.password = get_password_hash(user.password)
-    current_user.updated_at = datetime.now()
 
     session.add(current_user)
     session.commit()
