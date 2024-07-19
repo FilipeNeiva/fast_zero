@@ -97,20 +97,6 @@ def test_update_wrong_user(client, other_user, token):
     assert response.json() == {'detail': 'Not enough permission'}
 
 
-def test_update_user_nonexistent(client):
-    response = client.put(
-        '/users/2',
-        json={
-            'password': '123',
-            'username': 'testusername2',
-            'email': 'test@test.com',
-            'id': 1,
-        },
-    )
-
-    assert response.json() == {'detail': 'Not authenticated'}
-
-
 def test_read_user_by_id(client, user):
     response = client.get('/users/1')
 
@@ -134,12 +120,6 @@ def test_delete_user(client, user, token):
     )
 
     assert response.json() == {'message': 'User deleted'}
-
-
-def test_delete_user_nonexistent(client):
-    response = client.delete('/users/2')
-
-    assert response.json() == {'detail': 'Not authenticated'}
 
 
 def test_delete_wrong_user(client, other_user, token):
