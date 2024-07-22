@@ -13,12 +13,13 @@ def test_create_user(client):
         },
     )
 
+    user = response.json()
+
     assert response.status_code == HTTPStatus.CREATED
-    assert response.json() == {
-        'username': 'testusername',
-        'email': 'test@test.com',
-        'id': 1,
-    }
+    assert user['username'] == 'testusername'
+    assert user['email'] == 'test@test.com'
+    assert user['id'] == 1
+    assert 'created_at' in user
 
 
 def test_create_user_with_username_exist(client, user):

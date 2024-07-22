@@ -1,25 +1,30 @@
 from http import HTTPStatus
 
+from freezegun import freeze_time
+
 from fast_zero.models import TodoState
 from tests.conftest import TodoFactory
 
 
 def test_create_todo(client, token):
-    response = client.post(
-        '/todos',
-        headers={'Authorization': f'Bearer {token}'},
-        json={
-            'title': 'Test todo',
-            'description': 'Test todo description',
-            'state': 'draft',
-        },
-    )
-    assert response.json() == {
-        'id': 1,
-        'title': 'Test todo',
-        'description': 'Test todo description',
-        'state': 'draft',
-    }
+    with freeze_time('2023-07-14 12:00:00'):
+        response = client.post(
+            '/todos',
+            headers={'Authorization': f'Bearer {token}'},
+            json={
+                'title': 'Test todo',
+                'description': 'Test todo description',
+                'state': 'draft',
+            },
+        )
+
+        todo = response.json()
+
+        assert todo['id'] == 1
+        assert todo['title'] == 'Test todo'
+        assert todo['description'] == 'Test todo description'
+        assert todo['state'] == 'draft'
+        assert 'created_at' in todo
 
 
 def test_list_todos_should_return_5_todos(session, client, user, token):
