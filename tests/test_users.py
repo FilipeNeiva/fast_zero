@@ -57,6 +57,12 @@ def test_read_users(client):
 
 def test_read_users_with_user(client, user):
     user_schema = UserPublic.model_validate(user).model_dump()
+    user_schema['created_at'] = user.created_at.strftime(
+        '%Y-%m-%dT%H:%M:%S.%f'
+    )
+    user_schema['updated_at'] = user.updated_at.strftime(
+        '%Y-%m-%dT%H:%M:%S.%f'
+    )
     response = client.get('/users/')
 
     assert response.status_code == HTTPStatus.OK
@@ -75,11 +81,12 @@ def test_update_user(client, user, token):
         },
     )
 
-    assert response.json() == {
-        'username': 'testusername2',
-        'email': 'test@test.com',
-        'id': 1,
-    }
+    response_user = response.json()
+
+    assert response_user['username'] == 'testusername2'
+    assert response_user['email'] == 'test@test.com'
+    assert response_user['id'] == 1
+    assert response_user['created_at'] != response_user['updated_at']
 
 
 def test_update_wrong_user(client, other_user, token):
@@ -101,11 +108,12 @@ def test_update_wrong_user(client, other_user, token):
 def test_read_user_by_id(client, user):
     response = client.get('/users/1')
 
-    assert response.json() == {
-        'username': user.username,
-        'email': user.email,
-        'id': user.id,
-    }
+    response_user = response.json()
+
+    assert response_user['username'] == user.username
+    assert response_user['email'] == user.email
+    assert response_user['id'] == user.id
+    assert 'created_at' in response_user
 
 
 def test_read_user_by_id_nonexistent(client):
